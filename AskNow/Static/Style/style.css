@@ -1,0 +1,21 @@
+.body {
+  background-color: #7abecc;
+}
+
+.nav_color {
+  background-color: #e3f2fd;
+}
+
+#logo {
+  height: 100%;
+  width: 3.125rem;
+}
+
+.nav_item a:hover {
+  background: #3188be;
+}
+
+.home_scroll {
+  height: calc(100vh - 50px);
+  overflow-y: scroll;
+}

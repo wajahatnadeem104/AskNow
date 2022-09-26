@@ -1,0 +1,195 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block head %}
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous"
+  />
+  <script src="https://kit.fontawesome.com/777a0b0f94.js" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="{% static 'Script/like_cmnt.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'Style/post.css' %}">
+{% endblock head %}
+
+{% block content %}
+<div>
+  <div class="row m-0">
+    <div class="col-6 home_scroll">
+      {% for post in object_list %}
+          <section class="p-4">
+            <div class="post">
+              <div class="info">
+                  <div class="user">
+                      <div class="profile-pic"><img src="" alt=""></div>
+                      <strong class="username">
+                        <a href="{% url 'post_detail' post.slug %}">
+                          {{post.title|capfirst}}</a> - {{post.author.username}}
+                      </strong>
+                  </div>
+                  <small>{{ post.date_published.date }}</small>
+              </div>
+              {% if post.image %}
+                <div>
+                  <img src="{% static post.image %}" class="post-image" alt="post_image">
+                </div>
+              {% endif %}
+              <div class="post-content">
+                {% if post.body %}
+                  <div>
+                    {{post.body|safe}}
+                  </div>
+                {% endif %}
+                <div class="reaction-wrapper">
+                  <b id="post_{{post.id}}" class="pr-2">{{ post.total_votes }}</b>
+                  <div>
+                    <button id="upvote_{{post.id}}" 
+                      onclick="upvote_downvote_fun(this, '{{post.id}}');" 
+                      class="btn fa fa-arrow-alt-circle-up icons" 
+                      title="upvote" 
+                      {% if user in post.upvotes.all %}
+                        style="color: blue ;"
+                      {% endif %}
+                    ></button>
+                    <button id="downvote_{{post.id}}" 
+                      onclick="upvote_downvote_fun(this,'{{post.id}}');" 
+                      class="btn fa fa-arrow-alt-circle-down icons" 
+                      title="downvote" 
+                      {% if user in post.downvotes.all %}
+                        style="color: red ;" 
+                      {% endif %}
+                    ></button>
+                    <a class="pl-2 icons" href="{% url 'post_detail' post.slug %}">
+                      <i class='fa-regular fa-comment'></i>
+                    </a>
+                    <small>({{post.comments.all.count}})</small>
+                  </div>
+                </div>
+                <div>
+                  <strong id="cmnt_username_{{post.id}}"></strong>
+                  <p id="cmnt_body_{{post.id}}" class="pl-3 mb-0"></p>
+                </div>
+              </div>
+              <div class="comment-wrapper">
+                <i class="pl-2 fa-regular fa-comment"></i>
+                <input id="cmnt_{{post.id}}_body" type="text" class="comment-box"
+                  placeholder="Add a comment" maxlength="225">
+                <button onclick="comment_fun(this,'{{post.id}}')"
+                  class="comment-btn" value="post"
+                >post</button>
+              </div>
+            </div>
+          </section>
+      {% endfor %}
+    </div>
+    <div class="col-6">
+      <div class="row m-0 p-4">
+        <div class="col-6 p-2">
+          <div class="post p-2 text-center">
+            <h3>Create Post</h3>
+            <a class="btn btn-primary " href="{% url 'creat_post' %}">Create Post</a>
+          </div>
+          <div class="post mt-3">
+            <label class="p-2 m-0">
+              <a href="{% url 'view_mypost' %}">My Posts
+                <i class="pl-2 fa fa-angle-right"></i>
+              </a>
+            </label>
+            <hr class="m-0">
+            <div class="m-1">
+              <label class="m-0 pt-2 pl-2">
+                Today:
+              </label><hr class="mb-3 mt-0 ml-2 mr-2">
+              {% for today_my_post in my_posts_today %}
+              <div class="row m-0 pl-2">
+                <strong class="col-6 p-0">
+                  {{today_my_post.title|capfirst}}
+                </strong>
+                <div class="col-5 p-0">
+                  <label class="m-0">
+                    <i class="far fa-arrow-alt-circle-up" 
+                      title="upvotes">({{ today_my_post.upvotes.count }})</i>
+                    <i class="pl-1 far fa-arrow-alt-circle-down"
+                      title="downvotes">({{ today_my_post.downvotes.count }})</i>
+                  </label>
+                </div>
+                <div class="col-1 d-inline p-0">
+                  <a href="{% url 'post_detail' today_my_post.slug %}">
+                    <i class="fa fa-angle-right"></i>
+                  </a>
+                </div>
+              </div>
+              <hr class="mb-2 mt-0 ml-2 mr-2">
+              {% empty %}
+                <li class="m-0 pl-3">No Post</li>
+              {% endfor %}
+            </div>
+            <div class="m-1">
+              <label class="m-0 pt-2 pl-2">
+                Yesterday:
+              </label><hr class="mb-3 mt-0 ml-2 mr-2">
+              {% for yesterday_my_post in my_posts_yesterday %}
+                <div class="row m-0 pl-2">
+                  <strong class="col-6 p-0">
+                    {{yesterday_my_post.title|capfirst}}
+                  </strong>
+                  <div class="col-5 d-inline p-0">
+                    <label class="m-0">
+                      <i class="pl-2 far fa-arrow-alt-circle-up" 
+                        title="upvotes">({{ yesterday_my_post.upvotes.count }})</i>
+                      <i class="pl-2 far fa-arrow-alt-circle-down"
+                        title="downvotes">({{ yesterday_my_post.downvotes.count }})</i>
+                    </label> 
+                  </div>
+                  <div class="col-1 d-inline p-0">
+                    <a class="pl-1" href="{% url 'post_detail' yesterday_my_post.slug %}">
+                      <i class="fa fa-angle-right"></i>
+                    </a>
+                  </div>
+                </div>
+                <hr class="mb-2 mt-0 ml-2 mr-2">
+              {% empty %}
+                <li class="m-0 pl-3">No Post</li>
+                <hr class="m-0">
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="col-6 p-2">
+          <div class="post">
+            <p class="text-center m-0">Trending Today</p>
+            <hr class="m-0">
+            <div class="m-1 pl-3 pr-3">
+              {% for top_post in top_post_today %}
+                <div class="pt-3">
+                  <strong>
+                    {{top_post.title|capfirst}} - <small> {{top_post.author.username}} </small>
+                  </strong>
+                  <div class="float-right d-inline">
+                    <label>
+                      Votes: {{ top_post.total_votes }}
+                      <a class="pl-3" href="{% url 'post_detail' top_post.slug %}">
+                        <i class="fa fa-angle-right"></i>
+                      </a>
+                    </label>
+                  </div>  
+                </div>
+                <hr class="m-0">
+              {% empty %}
+                <li>No Post</li>
+                <hr class="m-0">
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

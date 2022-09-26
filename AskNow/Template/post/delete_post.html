@@ -1,0 +1,69 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block title %}
+    Delete Post
+{% endblock %}
+
+{% block head %}
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous"
+  />
+  <link rel="stylesheet" href="{% static 'Style/post.css' %}">
+{% endblock head %}
+
+{% block content %}
+<div class="row justify-content-md-center">
+    <div class="post col-md-6 m-3 p-3">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <h2 class="text-center">
+                Are you sure you want to delete the post!
+            </h2>
+            <div class="text-center">
+                <input class="btn btn-primary" type="submit" value="Delete">
+                <a class="btn btn-primary" 
+                  href="{{request.META.HTTP_REFERER}}"
+                >Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row justify-content-md-center">
+  <div class="col-md-6 p-4">
+    <section>
+      <div class="post">
+        <div class="info">
+            <div class="user">
+                <strong class="username">
+                    {{post.title|capfirst}}
+                </strong>
+            </div>
+            <small>{{ post.date_published.date }}</small>
+        </div>
+        {% if post.image %}
+          <div>
+            <img src="{% static post.image %}" class="post-image" alt="">
+          </div>
+        {% endif %}
+        <div class="post-content">
+          {% if post.body %}
+            <div>
+              {{post.body|safe}}
+            </div>
+          {% endif %}
+          <div class="mt-2 d-flex" >
+            <b class="pr-2"><small>Up Votes: </small>{{ post.upvotes.count }}</b>
+            <b class="pr-2"><small>Down Votes: </small>{{ post.downvotes.count }}</b>
+            <b class="pr-2"><small>Total Votes: </small>{{ post.total_votes }}</b>
+            <b class="pr-2"><small>Comments: </small>{{ post.comments.all.count }}</b>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div> 
+</div>
+{% endblock %}

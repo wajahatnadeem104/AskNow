@@ -1,0 +1,9 @@
+.text_area {
+  resize: none;
+  background-color: #e3f2fd;
+}
+
+.cmnt_scroll {
+  max-height: 400px;
+  overflow-y: scroll;
+}

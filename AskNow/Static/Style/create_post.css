@@ -1,0 +1,53 @@
+h1,
+label {
+  font-weight: 400;
+  color: #1c87c9;
+}
+
+form {
+  width: 100%;
+  background: #e3f2fd;
+  border: 1px solid #74cfbf;
+  border-radius: 0.3rem;
+  box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.2),
+    0 0.375rem 1.25rem 0 rgba(0, 0, 0, 0.19);
+  -webkit-box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.2),
+    0 0.375rem 1.25rem 0 rgba(0, 0, 0, 0.19);
+  -moz-box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.2),
+    0 0.375rem 1.25rem 0 rgba(0, 0, 0, 0.19);
+}
+
+input::placeholder {
+  color: #666;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: #1c87c9;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  border-radius: 0.313rem;
+}
+
+button:hover {
+  background: #2371a0;
+}
+
+.django-ckeditor-widget {
+  width: 100%;
+}
+
+.image-upload > input {
+  display: none;
+}
+
+.icons {
+  background-color: #e3f2fd;
+  padding: 0px;
+  margin: 0px;
+  font-size: 20px;
+  border-radius: 50%;
+}
